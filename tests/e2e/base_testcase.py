@@ -14,6 +14,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
 
 
 # noinspection PyPep8Naming
@@ -67,7 +68,12 @@ class BaseTestCase(unittest.TestCase):
         self.use_log_in = log_in
 
     def setUp(self):
-        self.driver = webdriver.Chrome(options=self.options)
+        try:
+            self.driver = webdriver.Chrome(options=self.options)
+        except WebDriverException:
+            # Trys this again if it fails the first time, if it fails a second time the test will still fail
+            print("Attempting to launch Chrome again")
+            self.driver = webdriver.Chrome(options=self.options)
         self.driver.set_window_size(1600, 900)
         self.enable_download_in_headless_chrome(self.download_dir)
         if self.use_log_in:
