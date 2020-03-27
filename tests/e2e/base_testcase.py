@@ -6,6 +6,7 @@ from datetime import date
 import os
 import time
 import unittest
+import sys
 
 from urllib.parse import urlencode
 
@@ -73,6 +74,7 @@ class BaseTestCase(unittest.TestCase):
         except WebDriverException:
             # Trys this again if it fails the first time, if it fails a second time the test will still fail
             print("Attempting to launch Chrome again")
+            sys.stderr.write("Trying to launch Chrome again")
             self.driver = webdriver.Chrome(options=self.options)
         self.driver.set_window_size(1600, 900)
         self.enable_download_in_headless_chrome(self.download_dir)
